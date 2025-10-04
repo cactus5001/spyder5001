@@ -10,6 +10,7 @@ interface BioPanelProps {
 const bioLines = [
   '🕷️ DancingSpyder',
   'Hellow There..!',
+  'This is DancingSpyder.',
   'A ghost in the machine.',
   'A private cyber investigator who walks the razor-thin line between truth and oblivion.',
   '',
@@ -47,7 +48,7 @@ export const BioPanel = ({ onComplete }: BioPanelProps) => {
   useEffect(() => {
     // Progressive line reveal with slower delays
     if (lineIndex >= 0 && lineIndex < bioLines.length - 1) {
-      const delay = lineIndex === 0 ? 2000 : 1800; // Much longer delays for readability
+      const delay = lineIndex === 0 ? 2500 : 2200; // Slower delays for readability
       const timer = setTimeout(() => {
         setLineIndex(lineIndex + 1);
       }, delay);
@@ -57,7 +58,7 @@ export const BioPanel = ({ onComplete }: BioPanelProps) => {
       const timer = setTimeout(() => {
         setShowButton(true);
         onComplete();
-      }, 2000);
+      }, 2500);
       return () => clearTimeout(timer);
     }
   }, [lineIndex, onComplete]);
@@ -163,6 +164,14 @@ export const BioPanel = ({ onComplete }: BioPanelProps) => {
                           ? 'text-base text-cyan-300 leading-relaxed font-mono'
                           : 'text-sm text-gray-300 leading-relaxed font-mono'
                       }
+                      onComplete={index < lineIndex ? undefined : () => {
+                        // Only trigger next line when current line completes
+                        if (index === lineIndex && index < bioLines.length - 1) {
+                          setTimeout(() => {
+                            setLineIndex(prev => prev + 1);
+                          }, 100);
+                        }
+                      }}
                     >
                       {index === 0 ? line : `> ${line}`}
                     </GlitchText>
