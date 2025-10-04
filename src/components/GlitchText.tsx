@@ -15,16 +15,16 @@ export const GlitchText = ({ children, delay = 0, className = '', onComplete }: 
 
   useEffect(() => {
     let currentIndex = 0;
-    const typingSpeed = 40;
+    const typingSpeed = 80; // Slower typing speed (was 40)
 
     const startTimer = setTimeout(() => {
       const typeInterval = setInterval(() => {
         if (currentIndex <= children.length) {
           setDisplayText(children.slice(0, currentIndex));
 
-          if (Math.random() > 0.85) {
+          if (Math.random() > 0.88) { // Less frequent glitches
             setGlitchActive(true);
-            setTimeout(() => setGlitchActive(false), 80);
+            setTimeout(() => setGlitchActive(false), 100);
           }
 
           currentIndex++;
@@ -32,7 +32,7 @@ export const GlitchText = ({ children, delay = 0, className = '', onComplete }: 
           clearInterval(typeInterval);
           setIsComplete(true);
           if (onComplete) {
-            setTimeout(onComplete, 100);
+            setTimeout(onComplete, 150);
           }
         }
       }, typingSpeed);
@@ -49,7 +49,7 @@ export const GlitchText = ({ children, delay = 0, className = '', onComplete }: 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{
-        duration: 0.4,
+        duration: 0.6,
         delay,
       }}
     >
@@ -63,18 +63,18 @@ export const GlitchText = ({ children, delay = 0, className = '', onComplete }: 
             : {}
         }
         transition={{
-          duration: 0.08,
+          duration: 0.1,
         }}
       >
         {displayText}
         {!isComplete && (
           <motion.span
-            className="inline-block w-2 h-full bg-cyan-400 ml-0.5"
+            className="inline-block w-2 h-full bg-cyan-400 ml-0.5 shadow-[0_0_8px_rgba(34,211,238,0.8)]"
             animate={{
               opacity: [0, 1, 0],
             }}
             transition={{
-              duration: 0.8,
+              duration: 1,
               repeat: Infinity,
               ease: 'linear',
             }}
@@ -85,40 +85,40 @@ export const GlitchText = ({ children, delay = 0, className = '', onComplete }: 
       {glitchActive && displayText && (
         <>
           <motion.span
-            className="absolute inset-0 text-cyan-400 opacity-50"
+            className="absolute inset-0 text-cyan-400 opacity-60"
             style={{
-              textShadow: '1px 0 rgba(34, 211, 238, 0.9)',
+              textShadow: '2px 0 rgba(34, 211, 238, 0.9)',
               clipPath: 'inset(0 0 0 0)',
             }}
             animate={{
-              x: [-1.5, 1.5],
+              x: [-2, 2],
               clipPath: [
                 'inset(30% 0 50% 0)',
                 'inset(10% 0 70% 0)',
               ],
             }}
             transition={{
-              duration: 0.08,
+              duration: 0.1,
             }}
           >
             {displayText}
           </motion.span>
 
           <motion.span
-            className="absolute inset-0 text-red-400 opacity-50"
+            className="absolute inset-0 text-red-400 opacity-60"
             style={{
-              textShadow: '-1px 0 rgba(239, 68, 68, 0.9)',
+              textShadow: '-2px 0 rgba(239, 68, 68, 0.9)',
               clipPath: 'inset(0 0 0 0)',
             }}
             animate={{
-              x: [1.5, -1.5],
+              x: [2, -2],
               clipPath: [
                 'inset(60% 0 20% 0)',
                 'inset(40% 0 40% 0)',
               ],
             }}
             transition={{
-              duration: 0.08,
+              duration: 0.1,
             }}
           >
             {displayText}
