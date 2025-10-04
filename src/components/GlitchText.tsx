@@ -15,16 +15,17 @@ export const GlitchText = ({ children, delay = 0, className = '', onComplete }: 
 
   useEffect(() => {
     let currentIndex = 0;
-    const typingSpeed = 80; // Slower typing speed (was 40)
+    const typingSpeed = 80; // Slower typing speed
 
     const startTimer = setTimeout(() => {
       const typeInterval = setInterval(() => {
         if (currentIndex <= children.length) {
           setDisplayText(children.slice(0, currentIndex));
 
-          if (Math.random() > 0.88) { // Less frequent glitches
+          // Only trigger glitch after text is fully displayed
+          if (currentIndex === children.length && Math.random() > 0.7) {
             setGlitchActive(true);
-            setTimeout(() => setGlitchActive(false), 100);
+            setTimeout(() => setGlitchActive(false), 150);
           }
 
           currentIndex++;
