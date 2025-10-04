@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface AvatarProps {
   shifted: boolean;
@@ -8,7 +8,7 @@ interface AvatarProps {
 
 export const Avatar = ({ shifted, onInitialAnimationComplete }: AvatarProps) => {
   const [glowIntensity, setGlowIntensity] = useState(0);
-  const [animationComplete, setAnimationComplete] = useState(false);
+  const completedRef = useRef(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -18,14 +18,14 @@ export const Avatar = ({ shifted, onInitialAnimationComplete }: AvatarProps) => 
   }, []);
 
   useEffect(() => {
-    if (!animationComplete && glowIntensity === 1) {
+    if (glowIntensity === 1 && !completedRef.current && !shifted) {
+      completedRef.current = true;
       const timer = setTimeout(() => {
-        setAnimationComplete(true);
         onInitialAnimationComplete();
       }, 1200);
       return () => clearTimeout(timer);
     }
-  }, [glowIntensity, animationComplete, onInitialAnimationComplete]);
+  }, [glowIntensity, shifted]);
 
   return (
     <motion.div
