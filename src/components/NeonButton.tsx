@@ -69,6 +69,25 @@ export const NeonButton = ({ children, onClick, href, delay = 0, className }: Ne
           ease: 'easeInOut',
         }}
       />
+
+      {/* Glitch effect overlay */}
+      <motion.div
+        className="absolute inset-0 opacity-0"
+        animate={{
+          opacity: [0, 0.3, 0],
+          x: [0, -2, 2, -2, 0],
+        }}
+        transition={{
+          duration: 6,
+          repeat: Infinity,
+          ease: 'easeInOut',
+          delay: 1,
+        }}
+        style={{
+          background: 'linear-gradient(45deg, rgba(34, 211, 238, 0.2), rgba(168, 85, 247, 0.2))',
+          filter: 'blur(1px)',
+        }}
+      />
     </ButtonComponent>
   );
 };

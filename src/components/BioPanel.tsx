@@ -35,6 +35,7 @@ const bioLines = [
 export const BioPanel = ({ onComplete }: BioPanelProps) => {
   const [lineIndex, setLineIndex] = useState(-1);
   const [showButton, setShowButton] = useState(false);
+  const [currentLineComplete, setCurrentLineComplete] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -46,22 +47,22 @@ export const BioPanel = ({ onComplete }: BioPanelProps) => {
   }, []);
 
   useEffect(() => {
-    // Progressive line reveal with slower delays
-    if (lineIndex >= 0 && lineIndex < bioLines.length - 1) {
-      const delay = lineIndex === 0 ? 2500 : 2200; // Slower delays for readability
+    // Only progress to next line when current line is complete
+    if (currentLineComplete && lineIndex < bioLines.length - 1) {
       const timer = setTimeout(() => {
         setLineIndex(lineIndex + 1);
-      }, delay);
+        setCurrentLineComplete(false);
+      }, 1800); // Longer delay between lines
       return () => clearTimeout(timer);
-    } else if (lineIndex === bioLines.length - 1) {
-      // All lines visible, wait before showing button
+    } else if (currentLineComplete && lineIndex === bioLines.length - 1) {
+      // All lines complete, wait before showing button
       const timer = setTimeout(() => {
         setShowButton(true);
         onComplete();
       }, 2500);
       return () => clearTimeout(timer);
     }
-  }, [lineIndex, onComplete]);
+  }, [currentLineComplete, lineIndex, onComplete]);
 
   // Auto-scroll when new lines appear
   useEffect(() => {
@@ -75,6 +76,10 @@ export const BioPanel = ({ onComplete }: BioPanelProps) => {
       }
     }
   }, [lineIndex]);
+
+  const handleLineComplete = () => {
+    setCurrentLineComplete(true);
+  };
 
   return (
     <motion.div
@@ -164,14 +169,7 @@ export const BioPanel = ({ onComplete }: BioPanelProps) => {
                           ? 'text-base text-cyan-300 leading-relaxed font-mono'
                           : 'text-sm text-gray-300 leading-relaxed font-mono'
                       }
-                      onComplete={index < lineIndex ? undefined : () => {
-                        // Only trigger next line when current line completes
-                        if (index === lineIndex && index < bioLines.length - 1) {
-                          setTimeout(() => {
-                            setLineIndex(prev => prev + 1);
-                          }, 100);
-                        }
-                      }}
+                      onComplete={index === lineIndex ? handleLineComplete : undefined}
                     >
                       {index === 0 ? line : `> ${line}`}
                     </GlitchText>
@@ -197,7 +195,7 @@ export const BioPanel = ({ onComplete }: BioPanelProps) => {
                 delay={0}
                 className="w-full"
               >
-                <span className="text-sm font-mono tracking-wider">ESTABLISH_CONTACT</span>
+                <span className="text-sm font-mono tracking-wider">HAVE SOMETHING TO SAY?</span>
                 <motion.span
                   className="text-xs"
                   animate={{
